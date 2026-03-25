@@ -36,6 +36,6 @@ WHERE D.OrderQty > 0
 SELECT 
 	D.LineTotal AS ValorTotal,
 	D.LineTotal - ((D.OrderQty * D.UnitPrice * (1 - D.UnitPriceDiscount))) AS Validacao
-FROM Sales.SalesOrderHeader H
-JOIN Sales.SalesOrderDetail D
+FROM stg_SalesOrderHeader H
+JOIN stg_SalesOrderDetail D
 	ON H.SalesOrderID = D.SalesOrderID
