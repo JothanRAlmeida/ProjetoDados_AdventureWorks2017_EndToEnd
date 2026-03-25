@@ -13,7 +13,7 @@
 
 /*
 	Corverti a data para não ter horário, desnecessário neste caso pois estava zerado
-	Não arredondei os valores monetários para maior precisão nos resultados
+	Peguei apenas as duas primeiras casas dos valores monetários com arredondamento
 	Filtrei a quantidade para não ter vendas de zero produtos ou negativos
 */
 
@@ -24,16 +24,12 @@ SELECT
 	H.CustomerID AS id_cliente,
 	D.ProductID AS id_produto,
 	D.OrderQty AS quantidade,
-	D.UnitPrice AS preco_unitario,
-	D.LineTotal AS valor_total
+	ROUND(D.UnitPrice,2) AS preco_unitario,
+	ROUND(D.LineTotal,2) AS valor_total
 FROM stg_SalesOrderHeader H
 JOIN stg_SalesOrderDetail D
 	ON H.SalesOrderID = D.SalesOrderID
 WHERE D.OrderQty > 0
-
-
-
-
 
 
 -- Validar a regra de valor total

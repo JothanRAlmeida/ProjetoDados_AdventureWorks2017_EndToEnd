@@ -2,27 +2,33 @@
 
 /*
 	Criação da tabela fato:
-		Armazena métricas de negócio
-		Responder perguntas
+		Armazena métricas de negócio;
+		Responder perguntas.
 	Criação das tabelas de dimensão:
-		Descrever quem compra
-		Descrever o que é vendido
+		Descrever quem compra;
+		Descrever o que é vendido.
 */
 
--- TABELA FATO DE VENDA
+-- TABELA FATO DE VENDA (PREENCHIDA AO FINAL)
 CREATE TABLE F_Venda (
 	id_venda INT PRIMARY KEY IDENTITY (1,1),
 	id_cliente INT NOT NULL,
 	id_produto INT NOT NULL,
 	id_data INT NOT NULL,
 	quantidade INT NOT NULL,
-	valor_total DECIMAL (18,2) NOT NULL
+	valor_total DECIMAL (18,2) NOT NULL,
+
+	CONSTRAINT chk_quantidade_positiva
+		CHECK (quantidade > 0),
+
+	CONSTRAINT chk_valortotal_positivo
+		CHECK (valor_total > 0)
 );
 
 /*
-	O nome do cliente foi limpo
-	Foi feita a distinsão de pessoa física e pessoa jurídica para filtro
-	Também foi criada a coluna de recebe_promocao para filtro e análise de tendência
+	O nome do cliente foi limpo;
+	Foi feita a distinsão de pessoa física e pessoa jurídica para filtro;
+	Também foi criada a coluna de recebe_promocao para filtro e análise de tendência.
 */
 
 -- DIMENSÃO CLIENTE
@@ -45,9 +51,9 @@ JOIN stg_Person P
 
 
 /*
-	O nome, subcategoria e categoria foram limpos
-	Retirado horário das datas pois estavam zerados
-	Criado um campo ativo para filtrar produtos que ainda são vendidos e outros que não são mais
+	O nome, subcategoria e categoria foram limpos;
+	Retirado horário das datas pois estavam zerados;
+	Criado um campo ativo para filtrar produtos que ainda são vendidos e outros que não são mais.
 */
 
 -- DIMENSÃO PRODUTO
@@ -69,6 +75,10 @@ JOIN stg_ProductSubcategory PS
 JOIN stg_ProductCategory PC
 	ON PS.ProductCategoryID = PC.ProductCategoryID
 
+/*
+	A data foi destrinchada para filtragem;
+	Isso permite análise temporal de ano, mês, dia, trimestre, etc.
+*/
 
 -- DIMENSÃO TEMPO
 CREATE TABLE D_Calendario (
@@ -84,12 +94,12 @@ CREATE TABLE D_Calendario (
 	fim_semana INT NOT NULL
 );
 
--- POPULA DADOS CALENDARIO
+-- POPULA DADOS DO CALENDÁRIO
 SET LANGUAGE Portuguese;
 DECLARE @DataInicio DATE = '2000-01-01';
 DECLARE @DataFim DATE = '2030-12-31';
 
-;WITH CTE_Datas AS (
+WITH CTE_Datas AS (
     SELECT @DataInicio AS Data
     UNION ALL
     SELECT DATEADD(DAY, 1, Data)
@@ -106,7 +116,7 @@ SELECT
     DATEPART(QUARTER, Data), --Trimestre
     DATEPART(DW, Data), --DiaSemana
     DATENAME(DW, Data), --NomeDiaSemana
-    CASE WHEN DATEPART(DW, Data) IN (1, 7) THEN 1 ELSE 0 END-- 1=Domingo, 7=Sábado
+    CASE WHEN DATEPART(DW, Data) IN (1, 7) THEN 1 ELSE 0 END --1=Domingo, 7=Sábado
 FROM CTE_Datas
 OPTION (MAXRECURSION 0); -- Necessário para intervalos longos
 
