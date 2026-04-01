@@ -14,7 +14,7 @@ OLTP (AdventureWorks) -> Staging (`stg\_`) -> Transformação (views) -> Data Wa
 
 ## Etapas do Projeto
 
-### 1. Modelagem Dimensional (Star Schema)
+### 1. Modelagem Dimensional (Pasta ModelagemStarSchema)
 
 Foi desenvolvido um modelo dimensional com:
 
@@ -47,9 +47,7 @@ Utilização de **views** (`vw_`) para:
 - Realizar JOINs entre tabelas
 - Criar métricas como `valor_total`
 
-Exemplo:
-
-- `vw_vendas`
+Exemplo: `vw_vendas`
 
 ### 4. Data Warehouse
 
@@ -62,7 +60,19 @@ Dados tratados, integrados e prontos para análise.
 
 ### 5. Power BI
 
-Desenvolvimento de dashboard com:
+#### Conexão com os Dados
+
+O Power BI foi conetado diretamente ao banco de dados SQL Server contendo o Data Warehouse. Essa abordagem permite trabalhar com dados já modelados e otimizados para análise, evitando transformações complexas dentro do próprio Power BI.
+
+##### Vantagens dessa abordagem
+
+- **Melhor performance**: o modelo dimensional já está preparado para consultas analíticas, reduzindo o processamento no Power BI
+- **Separação de responsabilidades**: O tratamento e modelagem são feitos no banco, enquanto o Power BI foca apenas na visualização
+- **Escalabilidade**: Facilita trabalhar com grandes volumes de dados
+- **Boas práticas de mercado**: Segue o padrão de uso de Data Warehouse como fonte de ferramentas de BI
+- **Reutilização de dados**: O mesmo DW pode ser consumido por outras ferramentas
+
+#### Desenvolvimento de dashboard com:
 
 #### KPIs:
 

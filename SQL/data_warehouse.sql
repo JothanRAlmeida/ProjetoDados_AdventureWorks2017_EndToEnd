@@ -11,7 +11,7 @@
 
 -- TABELA FATO DE VENDA (PREENCHIDA AO FINAL)
 CREATE TABLE F_Venda (
-	id_venda INT PRIMARY KEY IDENTITY (1,1),
+	id_venda INT NOT NULL,
 	id_cliente INT NOT NULL,
 	id_produto INT NOT NULL,
 	id_data INT NOT NULL,
@@ -122,8 +122,9 @@ OPTION (MAXRECURSION 0); -- Necessário para intervalos longos
 
 
 -- POPULA TABELA FATO
-INSERT INTO F_VENDA(id_cliente, id_produto, id_data, quantidade, valor_total)
+INSERT INTO F_VENDA(id_venda,id_cliente, id_produto, id_data, quantidade, valor_total)
 SELECT 
+	V.id_venda,
 	V.id_cliente,
 	V.id_produto,
 	C.id_data,
