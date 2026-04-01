@@ -10,7 +10,7 @@ A base utilizada foi a AdventureWorks2017, simulando um ambiente real de vendas.
 
 O fluxo de dados foi estruturado seguindo boas práticas de engenharia de dados:
 
-OLTP (AdventureWorks) -> Staging (stg\_) -> Transformação (views) -> Data Warehouse (fato + dimensões) -> Power BI (dashboard)
+OLTP (AdventureWorks) -> Staging (`stg\_`) -> Transformação (views) -> Data Warehouse (fato + dimensões) -> Power BI (dashboard)
 
 ## Etapas do Projeto
 
@@ -41,7 +41,7 @@ Objetivo: isolar a fonte de dados e preparar para transformação.
 
 ### 3. Transformação de Dados
 
-Utilização de **views (`vw_`)** para:
+Utilização de **views** (`vw_`) para:
 
 - Definir granularidade (1 linha = 1 item vendido)
 - Realizar JOINs entre tabelas
