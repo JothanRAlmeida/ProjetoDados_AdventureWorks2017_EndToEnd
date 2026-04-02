@@ -10,7 +10,7 @@ A base utilizada foi a AdventureWorks2017, simulando um ambiente real de vendas.
 
 O fluxo de dados foi estruturado seguindo boas práticas de engenharia de dados:
 
-OLTP (AdventureWorks) -> Staging (`stg\_`) -> Transformação (views) -> Data Warehouse (fato + dimensões) -> Power BI (dashboard)
+OLTP (AdventureWorks) -> Staging (`stg_`) -> Transformação (views) -> Data Warehouse (fato + dimensões) -> Power BI (dashboard)
 
 ## Etapas do Projeto
 
@@ -30,7 +30,7 @@ O modelo segue o padrão **Star Schema**, otimizado para consultas analíticas.
 
 ### 2. Camada Staging
 
-Foram criadas tabelas intermediárias (`stg_`) como cópia dos dados do OLTP:
+Foram criadas tabelas intermediárias (`stg_`) como cópia dos dados do OLTP para aprendizado:
 
 - `stg_salesorderheader`
 - `stg_salesorderdetail`
@@ -45,7 +45,7 @@ Utilização de **views** (`vw_`) para:
 
 - Definir granularidade (1 linha = 1 item vendido)
 - Realizar JOINs entre tabelas
-- Criar métricas como `valor_total`
+- Criar métricas como `valor_total` e `quantidade`
 
 Exemplo: `vw_vendas`
 
@@ -55,6 +55,7 @@ Criação do modelo dimensional físico:
 
 - Fato: `f_vendas`
 - Dimensões: `d_cliente`, `d_produto`, `d_calendario`
+- A dimensão calendário poderia ter sido criada diretamente no Power BI para situações pontuais (rapidez e flexibildiade)
 
 Dados tratados, integrados e prontos para análise.
 
@@ -64,9 +65,10 @@ Dados tratados, integrados e prontos para análise.
 
 O Power BI foi conetado diretamente ao banco de dados SQL Server contendo o Data Warehouse. Essa abordagem permite trabalhar com dados já modelados e otimizados para análise, evitando transformações complexas dentro do próprio Power BI.
 
-##### Vantagens dessa abordagem
+**Vantagens dessa abordagem:**
 
-- **Melhor performance**: o modelo dimensional já está preparado para consultas analíticas, reduzindo o processamento no Power BI
+- **Melhor performance**: O modelo dimensional já está preparado para consultas analíticas, reduzindo o processamento no Power BI
+- **Atualização em tempo real:** Permite uso do DirectQuery, onde os dados são consultados em tempo real diretamente da fonte
 - **Separação de responsabilidades**: O tratamento e modelagem são feitos no banco, enquanto o Power BI foca apenas na visualização
 - **Escalabilidade**: Facilita trabalhar com grandes volumes de dados
 - **Boas práticas de mercado**: Segue o padrão de uso de Data Warehouse como fonte de ferramentas de BI
