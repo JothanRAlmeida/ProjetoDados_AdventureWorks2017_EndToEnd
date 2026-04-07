@@ -1,14 +1,5 @@
 -- DATA WAREHOUSE
 
-/*
-	Criação da tabela fato:
-		Armazena métricas de negócio;
-		Responder perguntas.
-	Criação das tabelas de dimensão:
-		Descrever quem compra;
-		Descrever o que é vendido.
-*/
-
 -- TABELA FATO DE VENDA (PREENCHIDA AO FINAL)
 CREATE TABLE F_Venda (
 	id_venda INT NOT NULL,
@@ -25,21 +16,11 @@ CREATE TABLE F_Venda (
 		CHECK (valor_total > 0)
 );
 
-/*
-	O nome do cliente foi limpo;
-	Foi feita a distinsão de pessoa física e pessoa jurídica para filtro;
-	Também foi criada a coluna de recebe_promocao para filtro e análise de tendência.
-*/
 
 -- DIMENSÃO CLIENTE
 SELECT DISTINCT
 	C.CustomerID AS id_cliente,
 	TRIM(CONCAT(P.FirstName,' ',P.LastName)) AS nome,
-	CASE 
-		WHEN P.PersonType = 'IN' THEN 'PF'
-		WHEN P.PersonType = 'SC' THEN 'PJ'
-		ELSE NULL
-		END AS tipo_pessoa,
 	CASE
 		WHEN P.EmailPromotion = 0 THEN 'Não'
 		ELSE 'Sim'
@@ -50,12 +31,6 @@ JOIN stg_Person P
 	ON C.PersonID = P.BusinessEntityID
 
 
-/*
-	O nome, subcategoria e categoria foram limpos;
-	Retirado horário das datas pois estavam zerados;
-	Criado um campo ativo para filtrar produtos que ainda são vendidos e outros que não são mais.
-*/
-
 -- DIMENSÃO PRODUTO
 SELECT
 	P.ProductID AS id_produto,
@@ -65,8 +40,8 @@ SELECT
 	CAST(P.SellStartDate AS DATE) AS inicio_vendas,
 	CAST(P.SellEndDate AS DATE) AS fim_vendas,
 	CASE
-		WHEN P.SellEndDate IS NULL THEN 1
-		ELSE 0
+		WHEN P.SellEndDate IS NULL THEN 'Sim'
+		ELSE 'Não'
 	END AS ativo
 INTO D_Produto
 FROM stg_Product P
@@ -75,10 +50,6 @@ JOIN stg_ProductSubcategory PS
 JOIN stg_ProductCategory PC
 	ON PS.ProductCategoryID = PC.ProductCategoryID
 
-/*
-	A data foi destrinchada para filtragem;
-	Isso permite análise temporal de ano, mês, dia, trimestre, etc.
-*/
 
 -- DIMENSÃO TEMPO
 CREATE TABLE D_Calendario (
@@ -132,6 +103,6 @@ SELECT
 	V.valor_total
 FROM vw_Vendas V
 JOIN D_Calendario C
-	ON V.data = C.data
+	ON V.data_pedido = C.data
 
 SELECT * FROM F_Venda
